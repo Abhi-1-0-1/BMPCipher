@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}Decrypt - BMP Cipher{% endblock %}
+
+{% block content %}
+<div class="form-container fade-in">
+    <h2>Unlock Message</h2>
+
+    {% if result %}
+    <div class="result-card">
+        {% if thumbnail %}
+        <div class="thumbnail-preview fade-in">
+            <img src="{{ thumbnail }}" alt="Key Image">
+            <span class="thumb-label">Key Image Used</span>
+        </div>
+        {% endif %}
+        <h3>Operation Result</h3>
+        <div class="result-details">
+            <span class="detail-label">Password Used:</span>
+            <code class="password-chip">{{ password }}</code>
+        </div>
+        <div class="success-display">
+            <label>Recovered Message (Automatically Copied to Clipboard):</label>
+            <div class="message-bubble">
+                <textarea id="resultText" readonly class="modern-textarea auto-copy-trigger">{{ result }}</textarea>
+            </div>
+            <button class="copy-hint" onclick="copyToClipboard('resultText')">Copy To Clipboard</button>
+        </div>
+        <a href="/decrypt" class="main-btn secondary small">Decrypt Another</a>
+    </div>
+    {% else %}
+    {% if error %}
+    <script>
+        window.onload = function () {
+            alert("{{ error }}");
+        };
+    </script>
+    {% endif %}
+    <form action="/decrypt" method="post" enctype="multipart/form-data" class="modern-form">
+        <div class="input-group">
+            <label for="image">Original BMP Image</label>
+            <div class="file-input-wrapper">
+                <input type="file" name="image" id="image" accept=".bmp" required
+                    onchange="previewImage(this, 'decryptPreview')">
+                <!-- This part was auto-completed by AI after which I explored and understood it -->
+                <div class="file-dummy">Upload the key image...</div>
+            </div>
+            <div class="live-preview-box" style="display: none;">
+                <img id="decryptPreview" src="" alt="Preview">
+                <br>
+                <small class="preview-label">Image Preview</small>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="password">Security Password</label>
+            <input type="password" name="password" id="password" value="{{ password if password else '' }}"
+                placeholder="Enter your password" required>
+        </div>
+
+        <div class="input-group">
+            <label for="encrypted_message">Ciphertext Blob</label>
+            <textarea name="encrypted_message" id="encrypted_message" rows="6"
+                placeholder="Paste the encrypted string here..."
+                required>{{ encrypted_message if encrypted_message else '' }}</textarea>
+        </div>
+
+        <button type="submit" class="main-btn primary full">Reveal Message</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

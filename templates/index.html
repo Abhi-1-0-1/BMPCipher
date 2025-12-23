@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}Home - BMP Cipher{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <h1 class="fade-in">Ultimate Message Protection</h1>
+        <p class="fade-in delay-1">Leverage the raw power of BMP image pixels to generate unbreakable cryptographic keys.
+        </p>
+        <div class="hero-actions fade-in delay-2">
+            <a href="/encrypt" class="main-btn primary">Get Started</a>
+            <a href="/learn" class="main-btn secondary">Learn More</a>
+        </div>
+    </section>
+
+    <section id="features" class="features-grid">
+        <div class="feature-card fade-in delay-3">
+            <div class="icon-sphere">🎨</div>
+            <h3>Image Material</h3>
+            <p>Uses every single byte of your BMP image to create unique, high-entropy keys.</p>
+        </div>
+        <div class="feature-card fade-in delay-4">
+            <div class="icon-sphere">🔐</div>
+            <h3>AES-256 GCM</h3>
+            <p>Authenticated encryption ensuring your messages are both private and untampered.</p>
+        </div>
+        <div class="feature-card fade-in delay-5">
+            <div class="icon-sphere">🌈</div>
+            <h3>PBKDF2 Derivation</h3>
+            <p>100,000 iterations of password stretching for world-class brute-force protection.</p>
+        </div>
+        <div class="feature-card fade-in delay-6">
+            <div class="icon-sphere">🚀</div>
+            <h3>Instant Processing</h3>
+            <p>Lightning fast encryption and decryption directly in your browser.</p>
+        </div>
+    </section>
+{% endblock %}

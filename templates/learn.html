@@ -1,0 +1,200 @@
+{% extends "layout.html" %}
+
+{% block title %}Learn - How BMPCipher Works{% endblock %}
+
+{% block content %}
+<div class="learn-container fade-in">
+
+    <header class="learn-header">
+        <h1>How BMPCipher Works</h1>
+        <p>
+            A deep dive into the cryptographic design and internal architecture
+        </p>
+    </header>
+
+    <!-- HOW IT WORKS -->
+    <section class="learn-section">
+
+        <h2>High-Level Overview</h2>
+        <p>
+            BMPCipher is an image-assisted encryption system.
+            Instead of relying on passwords alone, it combines a user password
+            with the raw binary data of a BMP image to derive a cryptographic key.
+            This creates a two-factor encryption model:
+        </p>
+        <br>
+        <ul class="learn-list">
+            <li>Something you know → Password</li>
+            <li>Something you have → BMP image</li>
+        </ul>
+
+        <p>
+            Even if one factor is compromised, the encrypted data remains secure.
+        </p>
+
+    </section>
+
+    <!-- TECHNICAL ARCHITECTURE -->
+    <section class="learn-section">
+
+        <h2>Technical Architecture</h2>
+
+        <!-- STEP 1 -->
+        <details class="learn-dropdown">
+            <summary>
+                <span>1. Image Fingerprinting</span>
+                <span class="dropdown-arrow">▾</span>
+            </summary>
+
+            <div class="dropdown-content">
+                <p>
+                    When a BMP image is uploaded, the application reads the file
+                    as raw binary data rather than interpreting it visually.
+                    This ensures that every byte contributes to the cryptographic process.
+                </p>
+
+                <ul class="learn-list">
+                    <li>The BMP file is opened in binary mode</li>
+                    <li>All bytes are read exactly as stored</li>
+                    <li>A SHA-256 hash is generated from this data</li>
+                </ul>
+
+                <p>
+                    The result is a <strong>256-bit image fingerprint</strong> that
+                    uniquely identifies the image. Even a one-bit change in the image
+                    produces a completely different fingerprint.
+                </p>
+
+                <div class="learn-callout info">
+                    BMP files are ideal because they are uncompressed,
+                    deterministic, and preserve pixel data exactly.
+                </div>
+            </div>
+        </details>
+
+        <!-- STEP 2 -->
+        <details class="learn-dropdown">
+            <summary>
+                <span>2. Key Derivation (PBKDF2)</span>
+                <span class="dropdown-arrow">▾</span>
+            </summary>
+
+            <div class="dropdown-content">
+                <p>
+                    The encryption key is not used directly.
+                    Instead, BMPCipher derives a secure key using
+                    <strong>PBKDF2 (Password-Based Key Derivation Function 2)</strong>.
+                </p>
+
+                <ul class="learn-list">
+                    <li>User password is UTF-8 encoded</li>
+                    <li>A cryptographically secure 16-byte salt is generated</li>
+                    <li>Salt is combined with the image fingerprint</li>
+                    <li>100,000 PBKDF2 iterations are performed</li>
+                </ul>
+
+                <p>
+                    This process produces a hardened <strong>256-bit key</strong>
+                    suitable for AES-256 encryption.
+                </p>
+
+                <div class="learn-callout warning">
+                    PBKDF2 makes brute-force attacks computationally expensive
+                    by deliberately slowing down key generation.
+                </div>
+            </div>
+        </details>
+
+        <!-- STEP 3 -->
+        <details class="learn-dropdown">
+            <summary>
+                <span>3. AES-256-GCM Encryption</span>
+                <span class="dropdown-arrow">▾</span>
+            </summary>
+
+            <div class="dropdown-content">
+                <p>
+                    BMPCipher uses <strong>AES-256 in Galois/Counter Mode (GCM)</strong>,
+                    which provides both confidentiality and integrity.
+                </p>
+
+                <ul class="learn-list">
+                    <li>A unique 12-byte nonce is generated per encryption</li>
+                    <li>Message is encrypted symmetrically</li>
+                    <li>An authentication tag is produced automatically</li>
+                </ul>
+
+                <p>
+                    GCM ensures that any modification to the ciphertext
+                    is detected during decryption.
+                </p>
+
+                <div class="learn-callout danger">
+                    If even a single byte of ciphertext is altered,
+                    decryption fails immediately.
+                </div>
+            </div>
+        </details>
+
+        <!-- STEP 4 -->
+        <details class="learn-dropdown">
+            <summary>
+                <span>4. Ciphertext Packaging</span>
+                <span class="dropdown-arrow">▾</span>
+            </summary>
+
+            <div class="dropdown-content">
+                <p>
+                    To simplify storage and transmission, all required components
+                    are bundled into a single encoded string.
+                </p>
+
+                <ul class="learn-list">
+                    <li>Salt</li>
+                    <li>Nonce</li>
+                    <li>Encrypted message</li>
+                </ul>
+
+                <p>
+                    These components are concatenated and then
+                    <strong>Base64-encoded</strong>, producing a safe,
+                    copy-paste friendly ciphertext.
+                </p>
+            </div>
+        </details>
+
+        <!-- DECRYPTION -->
+        <details class="learn-dropdown">
+            <summary>
+                <span>5. Decryption & Authentication</span>
+                <span class="dropdown-arrow">▾</span>
+            </summary>
+
+            <div class="dropdown-content">
+                <p>
+                    Decryption reverses the encryption pipeline exactly.
+                    The same image and password must be supplied.
+                </p>
+
+                <ul class="learn-list">
+                    <li>Base64 string is decoded</li>
+                    <li>Salt, nonce, ciphertext extracted</li>
+                    <li>Image fingerprint regenerated</li>
+                    <li>PBKDF2 re-derives the key</li>
+                </ul>
+
+                <p>
+                    AES-GCM verifies the authentication tag automatically.
+                    If verification fails, decryption is aborted.
+                </p>
+            </div>
+        </details>
+
+    </section>
+
+    <div class="learn-footer">
+        <a href="/encrypt" class="main-btn primary">Try Encryption</a>
+    </div>
+
+</div>
+{% endblock %}

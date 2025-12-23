@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- This part was auto-completed by AI after which I explored and understood it -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}BMP Cipher{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+        <div class="animated-bg"></div>
+
+        <nav class="glass-nav">
+            <div class="nav-content">
+                <a href="/" class="logo">BMP<span>Cipher</span></a>
+                <div class="nav-links">
+                    <a href="/" class="{{ 'active' if request.path == '/' }}">Home</a>
+                    <a href="/encrypt" class="{{ 'active' if request.path == '/encrypt' }}">Encrypt</a>
+                    <a href="/decrypt" class="{{ 'active' if request.path == '/decrypt' }}">Decrypt</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container">
+            <!-- This part was auto-completed by AI after which I explored and understood it -->
+            {% if error %}
+                <div class="error-popup">
+                    <div class="error-content">
+                        <span class="error-icon">⚠️</span>
+                        <p>{{ error }}</p>
+                        <div class="error-timer"></div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="glass-footer">
+            <p>2025 BMP Cipher. Secure Image-Based Encryption.</p>
+            <p>CS50x Final Project By Abhinav</p>
+        </footer>
+
+        <script>
+            // This part was auto-completed by AI after which I explored and understood it
+            function copyToClipboard(elementId) {
+                const text = document.getElementById(elementId).value;
+                navigator.clipboard.writeText(text).then(() => {
+                    const btn = event.target;
+                    const originalText = btn.innerText;
+                    btn.innerText = "COPIED!";
+                    btn.style.background = "var(--success)";
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.style.background = "";
+                    }, 2000);
+                });
+            }
+
+            // This part was auto-completed by AI after which I explored and understood it
+            function previewImage(input, previewId) {
+                const preview = document.getElementById(previewId);
+                const dummy = input.nextElementSibling;
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.parentElement.style.display = "block";
+                        dummy.innerText = input.files[0].name;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            // Auto-copy on result load
+            window.onload = function() {
+                const autoCopy = document.querySelector('.auto-copy-trigger');
+                if (autoCopy) {
+                    const text = autoCopy.value;
+                    navigator.clipboard.writeText(text);
+                    console.log("Auto-copied result to clipboard");
+                }
+            }
+        </script>
+    </body>
+
+</html>
