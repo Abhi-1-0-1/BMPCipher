@@ -54,8 +54,11 @@
 
         <div class="input-group">
             <label for="password">Security Password</label>
-            <input type="password" name="password" id="password" value="{{ password if password else '' }}"
-                placeholder="Enter your password" required>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="password" class="modern-input" value="{{ password if password else '' }}"
+                    placeholder="Enter your password" required>
+                <span class="material-symbols-outlined toggle-password" onclick="togglePasswordVisibility('password', this)">visibility</span>
+            </div>
         </div>
 
         <div class="input-group">

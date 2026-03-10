@@ -270,7 +270,7 @@ body {
 }
 
 /* This part was auto-completed by AI after which I explored and understood it */
-input[type="password"],
+.modern-input,
 textarea {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -281,11 +281,76 @@ textarea {
     transition: all 0.3s ease;
 }
 
-input[type="password"]:focus,
+.modern-input:-webkit-autofill,
+.modern-input:-webkit-autofill:hover, 
+.modern-input:-webkit-autofill:focus, 
+.modern-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #0f0c29 inset !important;
+    -webkit-text-fill-color: #fff !important;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.modern-input:focus,
 textarea:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    font-family: 'Material Symbols Outlined';
+}
+
+.toggle-password:hover {
+    color: #fff;
+}
+
+@keyframes crossEye {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(-90deg) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes uncrossEye {
+    0% {
+        transform: rotate(90deg) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+    }
+}
+
+.animating-out .toggle-password {
+    animation: crossEye 0.3s ease-in forwards;
+}
+
+.animating-in .toggle-password {
+    animation: uncrossEye 0.3s ease-out forwards;
 }
 
 /* Custom File Input */

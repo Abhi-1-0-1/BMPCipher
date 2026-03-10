@@ -43,7 +43,10 @@
 
                 <div class="input-group">
                     <label for="password">Security Password</label>
-                    <input type="password" name="password" id="password" placeholder="Enter a strong password" required>
+                    <div class="password-wrapper">
+                        <input type="password" name="password" id="password" class="modern-input" placeholder="Enter a strong password" required>
+                        <span class="material-symbols-outlined toggle-password" onclick="togglePasswordVisibility('password', this)">visibility</span>
+                    </div>
                 </div>
 
                 <div class="input-group">

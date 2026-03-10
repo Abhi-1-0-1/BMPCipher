@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}BMP Cipher{% endblock %}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -47,6 +48,37 @@
         </footer>
 
         <script>
+            // Toggle password visibility
+            function togglePasswordVisibility(inputId, iconElement) {
+                const input = document.getElementById(inputId);
+                const wrapper = iconElement.parentElement;
+
+                if (input.type === "password") {
+                    // Transition: Password to Text (Hide: Click to show, icon changes to close eye)
+                    wrapper.classList.remove('animating-out');
+                    wrapper.classList.add('animating-in');
+                    
+                    input.type = "text";
+                    iconElement.innerText = "visibility_off";
+                    
+                    iconElement.addEventListener('animationend', function handleAnimationIn() {
+                        wrapper.classList.remove('animating-in');
+                        iconElement.removeEventListener('animationend', handleAnimationIn);
+                    }, { once: true });
+                } else {
+                    // Transition: Text to Password (Show: Click to hide, icon changes to open eye)
+                    wrapper.classList.remove('animating-in');
+                    wrapper.classList.add('animating-out');
+                    
+                    iconElement.addEventListener('animationend', function handleAnimationOut() {
+                        input.type = "password";
+                        iconElement.innerText = "visibility";
+                        wrapper.classList.remove('animating-out');
+                        iconElement.removeEventListener('animationend', handleAnimationOut);
+                    }, { once: true });
+                }
+            }
+
             // This part was auto-completed by AI after which I explored and understood it
             function copyToClipboard(elementId) {
                 const text = document.getElementById(elementId).value;
